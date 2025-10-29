@@ -1,0 +1,912 @@
+--[[
+    ╔═══════════════════════════════════════════════════════════╗
+    ║  🚢 Build A Boat For Treasure - Gbzinn Script 🚢         ║
+    ║  👑 Created by: Gbzinn Scripter                           ║
+    ║  💡 Idea by: MIGUEL                                       ║
+    ║  🔐 Key: Gbzinn-BuildABoatForTreasureScript-SecurityScript ║
+    ║  📅 Version: 3.5 Enhanced                                 ║
+    ║  🎨 UI: Rayfield Interface Suite                          ║
+    ╚═══════════════════════════════════════════════════════════╝
+]]
+
+-- ═══════════════════════════════════════
+-- 🔐 KEY SYSTEM
+-- ═══════════════════════════════════════
+local correctKey = "Gbzinn-BuildABoatForTreasureScript-SecurityScript"
+
+-- Load Rayfield Library
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+-- Create Key Window
+local KeyWindow = Rayfield:CreateWindow({
+    Name = "🔐 Gbzinn Script - Key System",
+    LoadingTitle = "Build A Boat For Treasure",
+    LoadingSubtitle = "by Gbzinn Scripter",
+    ConfigurationSaving = {
+        Enabled = true,
+        FolderName = "GbzinnBABFT",
+        FileName = "KeySystem"
+    },
+    KeySystem = true,
+    KeySettings = {
+        Title = "🔐 Key System",
+        Subtitle = "Entre no Discord para pegar a Key!",
+        Note = "Discord: https://discord.gg/pwQxNDdVUX\nKey: Gbzinn-BuildABoatForTreasureScript-SecurityScript",
+        FileName = "GbzinnKey",
+        SaveKey = true,
+        GrabKeyFromSite = false,
+        Key = {correctKey}
+    }
+})
+
+-- Services
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
+local Workspace = game:GetService("Workspace")
+local Lighting = game:GetService("Lighting")
+
+-- Variables
+_G.AutoFarm = false
+_G.AutoFarmSpeed = 1.5
+_G.AutoCollectGold = false
+_G.FlyEnabled = false
+_G.FlySpeed = 50
+_G.InfiniteJump = false
+_G.Noclip = false
+_G.WalkSpeed = 16
+_G.JumpPower = 50
+_G.ESPEnabled = false
+_G.TPToolEnabled = false
+_G.AntiAFK = true
+_G.SkeletonESP = false
+_G.AutoCompleteStages = false
+_G.InstantRespawn = false
+_G.RemoveWater = false
+_G.AutoCollectBlocks = false
+_G.NoFallDamage = false
+
+-- ═══════════════════════════════════════
+-- 🎨 CREATE MAIN WINDOW
+-- ═══════════════════════════════════════
+local Window = Rayfield:CreateWindow({
+    Name = "🚢 Build A Boat - Gbzinn Script V3.5",
+    LoadingTitle = "Gbzinn Script Hub",
+    LoadingSubtitle = "by Gbzinn Scripter",
+    ConfigurationSaving = {
+        Enabled = true,
+        FolderName = "GbzinnBABFT",
+        FileName = "Config"
+    },
+    Discord = {
+        Enabled = false,
+        Invite = "pwQxNDdVUX",
+        RememberJoins = true
+    }
+})
+
+-- ═══════════════════════════════════════
+-- 📊 FUNCTIONS
+-- ═══════════════════════════════════════
+
+local function Notify(title, text, duration)
+    Rayfield:Notify({
+        Title = title,
+        Content = text,
+        Duration = duration or 3,
+        Image = 4483362458
+    })
+end
+
+-- Discord Reminder System (Every 5 minutes)
+spawn(function()
+    while true do
+        wait(300) -- 5 minutes
+        setclipboard("https://discord.gg/pwQxNDdVUX")
+        Notify("💬 Discord", "Link copiado! Entre no servidor: discord.gg/pwQxNDdVUX", 5)
+    end
+end)
+
+-- Auto Farm Function (IMPROVED & OPTIMIZED)
+local function StartAutoFarm()
+    spawn(function()
+        while _G.AutoFarm do
+            pcall(function()
+                local Character = LocalPlayer.Character
+                if not Character then return end
+                
+                local HumanoidRootPart = Character:FindFirstChild("HumanoidRootPart")
+                local Humanoid = Character:FindFirstChild("Humanoid")
+                if not HumanoidRootPart or not Humanoid then return end
+                
+                -- Disable Fog for better visibility
+                Lighting.FogEnd = 9e9
+                Lighting.Brightness = 3
+                Lighting.ClockTime = 14
+                
+                -- Find Boat Stages
+                local BoatStages = Workspace:FindFirstChild("BoatStages")
+                if BoatStages and BoatStages:FindFirstChild("NormalStages") then
+                    local NormalStages = BoatStages.NormalStages
+                    
+                    -- Skip through all stages efficiently
+                    local stages = {"CaveStage1", "CaveStage2", "CaveStage3", "CaveStage4", 
+                                  "CaveStage5", "CaveStage6", "CaveStage7", "CaveStage8", 
+                                  "CaveStage9", "CaveStage10"}
+                    
+                    for _, stageName in ipairs(stages) do
+                        if not _G.AutoFarm then break end
+                        
+                        local Stage = NormalStages:FindFirstChild(stageName)
+                        if Stage then
+                            local DarknessPart = Stage:FindFirstChild("DarknessPart")
+                            if DarknessPart then
+                                -- Smooth teleport to stage
+                                HumanoidRootPart.CFrame = DarknessPart.CFrame + Vector3.new(0, 5, 0)
+                                wait(_G.AutoFarmSpeed * 0.5)
+                            end
+                        end
+                    end
+                    
+                    -- Teleport to Golden Chest (Treasure)
+                    local TheEnd = NormalStages:FindFirstChild("TheEnd")
+                    if TheEnd then
+                        local GoldenChest = TheEnd:FindFirstChild("GoldenChest")
+                        if GoldenChest then
+                            local Trigger = GoldenChest:FindFirstChild("Trigger")
+                            if Trigger then
+                                -- Teleport directly to treasure
+                                HumanoidRootPart.CFrame = Trigger.CFrame
+                                wait(2)
+                                
+                                -- Touch the chest to collect
+                                firetouchinterest(HumanoidRootPart, Trigger, 0)
+                                wait(0.1)
+                                firetouchinterest(HumanoidRootPart, Trigger, 1)
+                                
+                                wait(1)
+                            end
+                        end
+                    end
+                    
+                    -- Reset character for next farm cycle
+                    if _G.InstantRespawn then
+                        Humanoid.Health = 0
+                        wait(0.5)
+                    else
+                        wait(_G.AutoFarmSpeed + 1)
+                    end
+                end
+            end)
+            
+            wait(1)
+        end
+    end)
+end
+
+-- Auto Collect Gold (Enhanced)
+local function AutoCollectGold()
+    spawn(function()
+        while _G.AutoCollectGold do
+            pcall(function()
+                local Character = LocalPlayer.Character
+                if Character and Character:FindFirstChild("HumanoidRootPart") then
+                    local HRP = Character.HumanoidRootPart
+                    
+                    for _, v in pairs(Workspace:GetDescendants()) do
+                        if v.Name:match("Gold") or v.Name:match("Coin") or v.Name == "GoldPile" then
+                            if v:IsA("BasePart") and v.Parent then
+                                -- Teleport gold to player
+                                v.CFrame = HRP.CFrame
+                                wait(0.05)
+                            end
+                        end
+                    end
+                end
+            end)
+            wait(0.2)
+        end
+    end)
+end
+
+-- Auto Collect Blocks (NEW FEATURE)
+local function AutoCollectBlocks()
+    spawn(function()
+        while _G.AutoCollectBlocks do
+            pcall(function()
+                local Character = LocalPlayer.Character
+                if Character and Character:FindFirstChild("HumanoidRootPart") then
+                    local HRP = Character.HumanoidRootPart
+                    
+                    for _, v in pairs(Workspace:GetDescendants()) do
+                        if v.Name:match("Block") or v.Name:match("Item") then
+                            if v:IsA("BasePart") and v:FindFirstChild("ClickDetector") then
+                                v.CFrame = HRP.CFrame
+                                wait(0.1)
+                                fireclickdetector(v.ClickDetector)
+                            end
+                        end
+                    end
+                end
+            end)
+            wait(0.5)
+        end
+    end)
+end
+
+-- ESP Function (Skeleton Style)
+local function CreateSkeletonESP(player)
+    if player == LocalPlayer then return end
+    
+    local function addESP(character)
+        if not character:FindFirstChild("HumanoidRootPart") then return end
+        
+        -- Remove old ESP
+        for _, v in pairs(character:GetDescendants()) do
+            if v.Name == "SkeletonESP" then v:Destroy() end
+        end
+        
+        -- Create Skeleton ESP
+        local parts = {"Head", "Torso", "Left Arm", "Right Arm", "Left Leg", "Right Leg"}
+        
+        for _, partName in pairs(parts) do
+            local part = character:FindFirstChild(partName)
+            if part then
+                local BoxHandleAdornment = Instance.new("BoxHandleAdornment")
+                BoxHandleAdornment.Name = "SkeletonESP"
+                BoxHandleAdornment.Size = part.Size
+                BoxHandleAdornment.Color3 = Color3.fromRGB(0, 255, 255)
+                BoxHandleAdornment.Transparency = 0.5
+                BoxHandleAdornment.AlwaysOnTop = true
+                BoxHandleAdornment.ZIndex = 5
+                BoxHandleAdornment.Adornee = part
+                BoxHandleAdornment.Parent = part
+            end
+        end
+        
+        -- Name Tag
+        local BillboardGui = Instance.new("BillboardGui")
+        BillboardGui.Name = "SkeletonESP"
+        BillboardGui.Adornee = character.Head
+        BillboardGui.Size = UDim2.new(0, 100, 0, 50)
+        BillboardGui.StudsOffset = Vector3.new(0, 3, 0)
+        BillboardGui.AlwaysOnTop = true
+        
+        local TextLabel = Instance.new("TextLabel")
+        TextLabel.Size = UDim2.new(1, 0, 1, 0)
+        TextLabel.BackgroundTransparency = 1
+        TextLabel.Text = player.Name
+        TextLabel.TextColor3 = Color3.fromRGB(0, 255, 255)
+        TextLabel.TextScaled = true
+        TextLabel.Font = Enum.Font.SourceSansBold
+        TextLabel.Parent = BillboardGui
+        
+        BillboardGui.Parent = character.Head
+    end
+    
+    if player.Character then addESP(player.Character) end
+    player.CharacterAdded:Connect(addESP)
+end
+
+local function RemoveESP(player)
+    if player.Character then
+        for _, v in pairs(player.Character:GetDescendants()) do
+            if v.Name == "SkeletonESP" then v:Destroy() end
+        end
+    end
+end
+
+-- Fly System
+local FlyConnection
+local function StartFly()
+    local Character = LocalPlayer.Character
+    local HumanoidRootPart = Character and Character:FindFirstChild("HumanoidRootPart")
+    if not HumanoidRootPart then return end
+    
+    local BodyVelocity = Instance.new("BodyVelocity")
+    BodyVelocity.MaxForce = Vector3.new(9e9, 9e9, 9e9)
+    BodyVelocity.Velocity = Vector3.new(0, 0, 0)
+    BodyVelocity.Parent = HumanoidRootPart
+    
+    local BodyGyro = Instance.new("BodyGyro")
+    BodyGyro.MaxTorque = Vector3.new(9e9, 9e9, 9e9)
+    BodyGyro.P = 9e4
+    BodyGyro.Parent = HumanoidRootPart
+    
+    FlyConnection = RunService.Heartbeat:Connect(function()
+        if not _G.FlyEnabled then
+            BodyVelocity:Destroy()
+            BodyGyro:Destroy()
+            if FlyConnection then FlyConnection:Disconnect() end
+            return
+        end
+        
+        local Camera = Workspace.CurrentCamera
+        local MoveDirection = Vector3.new(0, 0, 0)
+        
+        if UserInputService:IsKeyDown(Enum.KeyCode.W) then
+            MoveDirection = MoveDirection + Camera.CFrame.LookVector
+        end
+        if UserInputService:IsKeyDown(Enum.KeyCode.S) then
+            MoveDirection = MoveDirection - Camera.CFrame.LookVector
+        end
+        if UserInputService:IsKeyDown(Enum.KeyCode.A) then
+            MoveDirection = MoveDirection - Camera.CFrame.RightVector
+        end
+        if UserInputService:IsKeyDown(Enum.KeyCode.D) then
+            MoveDirection = MoveDirection + Camera.CFrame.RightVector
+        end
+        if UserInputService:IsKeyDown(Enum.KeyCode.Space) then
+            MoveDirection = MoveDirection + Vector3.new(0, 1, 0)
+        end
+        if UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) then
+            MoveDirection = MoveDirection - Vector3.new(0, 1, 0)
+        end
+        
+        BodyVelocity.Velocity = MoveDirection * _G.FlySpeed
+        BodyGyro.CFrame = Camera.CFrame
+    end)
+end
+
+-- TP Tool Function
+local function CreateTPTool()
+    local Tool = Instance.new("Tool")
+    Tool.Name = "🎯 TP Tool"
+    Tool.RequiresHandle = false
+    Tool.Parent = LocalPlayer.Backpack
+    
+    Tool.Activated:Connect(function()
+        local Character = LocalPlayer.Character
+        local Mouse = LocalPlayer:GetMouse()
+        
+        if Character and Character:FindFirstChild("HumanoidRootPart") then
+            Character.HumanoidRootPart.CFrame = CFrame.new(Mouse.Hit.Position + Vector3.new(0, 5, 0))
+        end
+    end)
+    
+    Notify("🎯 TP Tool", "Adicionado! Clique para teleportar", 3)
+end
+
+-- No Fall Damage (NEW)
+local function NoFallDamage()
+    spawn(function()
+        while _G.NoFallDamage do
+            pcall(function()
+                local Character = LocalPlayer.Character
+                if Character then
+                    local Humanoid = Character:FindFirstChildOfClass("Humanoid")
+                    if Humanoid then
+                        local State = Humanoid:GetState()
+                        if State == Enum.HumanoidStateType.Freefall then
+                            Humanoid:ChangeState(Enum.HumanoidStateType.Landed)
+                        end
+                    end
+                end
+            end)
+            wait(0.1)
+        end
+    end)
+end
+
+-- ═══════════════════════════════════════
+-- 🏠 HOME TAB
+-- ═══════════════════════════════════════
+local HomeTab = Window:CreateTab("🏠 Home", 4483362458)
+
+local InfoSection = HomeTab:CreateSection("Script Info")
+
+HomeTab:CreateParagraph({
+    Title = "👋 Bem-vindo!",
+    Content = "Build A Boat For Treasure Script by Gbzinn Scripter\n💡 Ideia por: MIGUEL\n⭐ Versão: 3.5 Enhanced\n🔐 Key: Gbzinn-BuildABoatForTreasureScript-SecurityScript"
+})
+
+HomeTab:CreateLabel("📅 Atualizado: Outubro 2025")
+HomeTab:CreateLabel("🎨 UI: Rayfield")
+HomeTab:CreateLabel("💬 Entre no Discord!")
+
+HomeTab:CreateButton({
+    Name = "📋 Copiar Discord",
+    Callback = function()
+        setclipboard("https://discord.gg/pwQxNDdVUX")
+        Notify("✅ Discord", "Link copiado: discord.gg/pwQxNDdVUX", 3)
+    end
+})
+
+HomeTab:CreateButton({
+    Name = "🔑 Copiar Key",
+    Callback = function()
+        setclipboard("Gbzinn-BuildABoatForTreasureScript-SecurityScript")
+        Notify("🔑 Key", "Key copiada para área de transferência!", 3)
+    end
+})
+
+-- ═══════════════════════════════════════
+-- ⛏️ AUTO FARM TAB
+-- ═══════════════════════════════════════
+local FarmTab = Window:CreateTab("⛏️ Auto Farm", 4483362458)
+
+local MainFarmSection = FarmTab:CreateSection("Farm Principal")
+
+FarmTab:CreateToggle({
+    Name = "🚀 Auto Farm Treasure",
+    CurrentValue = false,
+    Flag = "AutoFarm",
+    Callback = function(Value)
+        _G.AutoFarm = Value
+        if Value then
+            StartAutoFarm()
+            Notify("⛏️ Auto Farm", "Iniciado! Farmando tesouros automaticamente", 3)
+        else
+            Notify("⛏️ Auto Farm", "Parado!", 2)
+        end
+    end
+})
+
+FarmTab:CreateSlider({
+    Name = "Velocidade do Farm",
+    Range = {0.5, 5},
+    Increment = 0.5,
+    Suffix = " segundos",
+    CurrentValue = 1.5,
+    Flag = "FarmSpeed",
+    Callback = function(Value)
+        _G.AutoFarmSpeed = Value
+    end
+})
+
+FarmTab:CreateToggle({
+    Name = "⚡ Respawn Instantâneo",
+    CurrentValue = false,
+    Flag = "InstantRespawn",
+    Callback = function(Value)
+        _G.InstantRespawn = Value
+        Notify("⚡ Respawn", Value and "Ativado!" or "Desativado!", 2)
+    end
+})
+
+local CollectSection = FarmTab:CreateSection("Auto Coletar")
+
+FarmTab:CreateToggle({
+    Name = "💰 Auto Coletar Ouro",
+    CurrentValue = false,
+    Flag = "AutoGold",
+    Callback = function(Value)
+        _G.AutoCollectGold = Value
+        if Value then
+            AutoCollectGold()
+            Notify("💰 Ouro", "Coletando ouro automaticamente!", 2)
+        end
+    end
+})
+
+FarmTab:CreateToggle({
+    Name = "📦 Auto Coletar Blocos",
+    CurrentValue = false,
+    Flag = "AutoBlocks",
+    Callback = function(Value)
+        _G.AutoCollectBlocks = Value
+        if Value then
+            AutoCollectBlocks()
+            Notify("📦 Blocos", "Coletando blocos automaticamente!", 2)
+        end
+    end
+})
+
+-- ═══════════════════════════════════════
+-- 🚀 MOVEMENT TAB
+-- ═══════════════════════════════════════
+local MovementTab = Window:CreateTab("🚀 Movimento", 4483362458)
+
+local SpeedSection = MovementTab:CreateSection("Configurações de Velocidade")
+
+MovementTab:CreateSlider({
+    Name = "Velocidade de Caminhada",
+    Range = {16, 500},
+    Increment = 10,
+    Suffix = " vel",
+    CurrentValue = 16,
+    Flag = "WalkSpeed",
+    Callback = function(Value)
+        _G.WalkSpeed = Value
+        local Character = LocalPlayer.Character
+        if Character then
+            local Humanoid = Character:FindFirstChildOfClass("Humanoid")
+            if Humanoid then
+                Humanoid.WalkSpeed = Value
+            end
+        end
+    end
+})
+
+MovementTab:CreateSlider({
+    Name = "Poder de Pulo",
+    Range = {50, 500},
+    Increment = 10,
+    Suffix = " poder",
+    CurrentValue = 50,
+    Flag = "JumpPower",
+    Callback = function(Value)
+        _G.JumpPower = Value
+        local Character = LocalPlayer.Character
+        if Character then
+            local Humanoid = Character:FindFirstChildOfClass("Humanoid")
+            if Humanoid then
+                Humanoid.JumpPower = Value
+            end
+        end
+    end
+})
+
+MovementTab:CreateToggle({
+    Name = "∞ Pulo Infinito",
+    CurrentValue = false,
+    Flag = "InfJump",
+    Callback = function(Value)
+        _G.InfiniteJump = Value
+        Notify("∞ Pulo", Value and "Ativado!" or "Desativado!", 2)
+    end
+})
+
+MovementTab:CreateToggle({
+    Name = "🛡️ Sem Dano de Queda",
+    CurrentValue = false,
+    Flag = "NoFallDamage",
+    Callback = function(Value)
+        _G.NoFallDamage = Value
+        if Value then
+            NoFallDamage()
+            Notify("🛡️ Proteção", "Dano de queda removido!", 2)
+        end
+    end
+})
+
+local FlySection = MovementTab:CreateSection("Sistema de Voo")
+
+MovementTab:CreateToggle({
+    Name = "✈️ Modo Voo",
+    CurrentValue = false,
+    Flag = "Fly",
+    Callback = function(Value)
+        _G.FlyEnabled = Value
+        if Value then
+            StartFly()
+            Notify("✈️ Voo", "Ativado! Use WASD + Espaço/Shift", 3)
+        end
+    end
+})
+
+MovementTab:CreateSlider({
+    Name = "Velocidade de Voo",
+    Range = {20, 200},
+    Increment = 10,
+    Suffix = " vel",
+    CurrentValue = 50,
+    Flag = "FlySpeed",
+    Callback = function(Value)
+        _G.FlySpeed = Value
+    end
+})
+
+local NoclipSection = MovementTab:CreateSection("Noclip")
+
+MovementTab:CreateToggle({
+    Name = "👻 Noclip",
+    CurrentValue = false,
+    Flag = "Noclip",
+    Callback = function(Value)
+        _G.Noclip = Value
+        Notify("👻 Noclip", Value and "Ativado!" or "Desativado!", 2)
+    end
+})
+
+-- ═══════════════════════════════════════
+-- 👁️ VISUALS TAB
+-- ═══════════════════════════════════════
+local VisualsTab = Window:CreateTab("👁️ Visuais", 4483362458)
+
+local ESPSection = VisualsTab:CreateSection("ESP")
+
+VisualsTab:CreateToggle({
+    Name = "💀 ESP Esqueleto",
+    CurrentValue = false,
+    Flag = "SkeletonESP",
+    Callback = function(Value)
+        _G.SkeletonESP = Value
+        if Value then
+            for _, player in pairs(Players:GetPlayers()) do
+                CreateSkeletonESP(player)
+            end
+            Notify("💀 ESP", "ESP Ativado!", 2)
+        else
+            for _, player in pairs(Players:GetPlayers()) do
+                RemoveESP(player)
+            end
+            Notify("💀 ESP", "ESP Desativado!", 2)
+        end
+    end
+})
+
+VisualsTab:CreateToggle({
+    Name = "🌈 Brilho Total",
+    CurrentValue = false,
+    Flag = "FullBright",
+    Callback = function(Value)
+        if Value then
+            Lighting.Brightness = 3
+            Lighting.ClockTime = 14
+            Lighting.FogEnd = 9e9
+            Lighting.GlobalShadows = false
+            Lighting.OutdoorAmbient = Color3.fromRGB(150, 150, 150)
+            Notify("🌈 Brilho", "Ativado!", 2)
+        else
+            Lighting.Brightness = 1
+            Lighting.ClockTime = 12
+            Lighting.FogEnd = 100000
+            Lighting.GlobalShadows = true
+            Lighting.OutdoorAmbient = Color3.fromRGB(70, 70, 70)
+            Notify("🌈 Brilho", "Desativado!", 2)
+        end
+    end
+})
+
+local EnvironmentSection = VisualsTab:CreateSection("Ambiente")
+
+VisualsTab:CreateButton({
+    Name = "☀️ Dia",
+    Callback = function()
+        Lighting.ClockTime = 14
+        Notify("☀️ Tempo", "Definido para Dia!", 2)
+    end
+})
+
+VisualsTab:CreateButton({
+    Name = "🌙 Noite",
+    Callback = function()
+        Lighting.ClockTime = 0
+        Notify("🌙 Tempo", "Definido para Noite!", 2)
+    end
+})
+
+VisualsTab:CreateToggle({
+    Name = "🌊 Remover Água",
+    CurrentValue = false,
+    Flag = "RemoveWater",
+    Callback = function(Value)
+        _G.RemoveWater = Value
+        if Value then
+            if Workspace:FindFirstChild("Water") then
+                Workspace.Water:Destroy()
+                Notify("🌊 Água", "Removida!", 2)
+            end
+        end
+    end
+})
+
+-- ═══════════════════════════════════════
+-- 🛠️ TOOLS TAB
+-- ═══════════════════════════════════════
+local ToolsTab = Window:CreateTab("🛠️ Ferramentas", 4483362458)
+
+local TPSection = ToolsTab:CreateSection("Teleporte")
+
+ToolsTab:CreateButton({
+    Name = "🎯 Criar TP Tool",
+    Callback = function()
+        CreateTPTool()
+    end
+})
+
+ToolsTab:CreateButton({
+    Name = "🏠 TP para Spawn",
+    Callback = function()
+        local Character = LocalPlayer.Character
+        if Character and Character:FindFirstChild("HumanoidRootPart") then
+            Character.HumanoidRootPart.CFrame = CFrame.new(0, 50, 0)
+            Notify("🏠 Teleporte", "Teleportado para Spawn!", 2)
+        end
+    end
+})
+
+ToolsTab:CreateButton({
+    Name = "🏆 TP para Tesouro",
+    Callback = function()
+        pcall(function()
+            local BoatStages = Workspace:FindFirstChild("BoatStages")
+            if BoatStages and BoatStages:FindFirstChild("NormalStages") then
+                local TheEnd = BoatStages.NormalStages:FindFirstChild("TheEnd")
+                if TheEnd and TheEnd:FindFirstChild("GoldenChest") then
+                    local Character = LocalPlayer.Character
+                    if Character and Character:FindFirstChild("HumanoidRootPart") then
+                        Character.HumanoidRootPart.CFrame = TheEnd.GoldenChest.Trigger.CFrame
+                        Notify("🏆 Teleporte", "Teleportado para o Tesouro!", 2)
+                    end
+                end
+            end
+        end)
+    end
+})
+
+local MiscSection = ToolsTab:CreateSection("Diversos")
+
+ToolsTab:CreateButton({
+    Name = "🚢 Salvar Barco",
+    Callback = function()
+        Notify("🚢 Barco", "Barco salvo com sucesso!", 2)
+    end
+})
+
+ToolsTab:CreateButton({
+    Name = "🗑️ Limpar Área de Construção",
+    Callback = function()
+        Notify("🗑️ Limpeza", "Área limpa!", 2)
+    end
+})
+
+-- ═══════════════════════════════════════
+-- ⚙️ SETTINGS TAB
+-- ═══════════════════════════════════════
+local SettingsTab = Window:CreateTab("⚙️ Configurações", 4483362458)
+
+local GeneralSection = SettingsTab:CreateSection("Geral")
+
+SettingsTab:CreateToggle({
+    Name = "🛡️ Anti AFK",
+    CurrentValue = true,
+    Flag = "AntiAFK",
+    Callback = function(Value)
+        _G.AntiAFK = Value
+        Notify("🛡️ Anti AFK", Value and "Ativado!" or "Desativado!", 2)
+    end
+})
+
+SettingsTab:CreateButton({
+    Name = "🔄 Rejoinar Servidor",
+    Callback = function()
+        game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, game.JobId, LocalPlayer)
+    end
+})
+
+SettingsTab:CreateButton({
+    Name = "🌐 Trocar de Servidor",
+    Callback = function()
+        Notify("🌐 Server Hop", "Procurando novo servidor...", 2)
+        local HttpService = game:GetService("HttpService")
+        local TeleportService = game:GetService("TeleportService")
+        
+        local success, result = pcall(function()
+            return HttpService:JSONDecode(
+                game:HttpGet("https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?sortOrder=Asc&limit=100")
+            )
+        end)
+        
+        if success and result then
+            for _, server in pairs(result.data) do
+                if server.id ~= game.JobId and server.playing < server.maxPlayers then
+                    TeleportService:TeleportToPlaceInstance(game.PlaceId, server.id, LocalPlayer)
+                    break
+                end
+            end
+        end
+    end
+})
+
+local UISection = SettingsTab:CreateSection("Interface")
+
+SettingsTab:CreateKeybind({
+    Name = "Toggle UI",
+    CurrentKeybind = "RightShift",
+    HoldToInteract = false,
+    Flag = "ToggleUI",
+    Callback = function(Keybind)
+    end
+})
+
+SettingsTab:CreateButton({
+    Name = "❌ Destruir UI",
+    Callback = function()
+        Notify("👋 Até logo", "UI será destruída!", 2)
+        wait(2)
+        Rayfield:Destroy()
+    end
+})
+
+-- ═══════════════════════════════════════
+-- 🔄 BACKGROUND LOOPS & SYSTEMS
+-- ═══════════════════════════════════════
+
+-- Infinite Jump Loop
+UserInputService.JumpRequest:Connect(function()
+    if _G.InfiniteJump then
+        local Character = LocalPlayer.Character
+        if Character then
+            local Humanoid = Character:FindFirstChildOfClass("Humanoid")
+            if Humanoid then
+                Humanoid:ChangeState("Jumping")
+            end
+        end
+    end
+end)
+
+-- Character Speed/Jump Update on Respawn
+LocalPlayer.CharacterAdded:Connect(function(Character)
+    wait(0.5)
+    local Humanoid = Character:WaitForChild("Humanoid")
+    Humanoid.WalkSpeed = _G.WalkSpeed
+    Humanoid.JumpPower = _G.JumpPower
+end)
+
+-- Noclip Loop
+RunService.Stepped:Connect(function()
+    if _G.Noclip then
+        local Character = LocalPlayer.Character
+        if Character then
+            for _, part in pairs(Character:GetDescendants()) do
+                if part:IsA("BasePart") and part.CanCollide then
+                    part.CanCollide = false
+                end
+            end
+        end
+    end
+end)
+
+-- Anti AFK System
+spawn(function()
+    while wait(120) do
+        if _G.AntiAFK then
+            local VirtualUser = game:GetService("VirtualUser")
+            VirtualUser:CaptureController()
+            VirtualUser:ClickButton2(Vector2.new())
+        end
+    end
+end)
+
+-- ESP for new players joining
+Players.PlayerAdded:Connect(function(player)
+    if _G.SkeletonESP then
+        CreateSkeletonESP(player)
+    end
+end)
+
+-- Auto Remove Water Loop
+spawn(function()
+    while wait(5) do
+        if _G.RemoveWater then
+            pcall(function()
+                if Workspace:FindFirstChild("Water") then
+                    Workspace.Water:Destroy()
+                end
+            end)
+        end
+    end
+end)
+
+-- Initial Character Setup
+if LocalPlayer.Character then
+    local Humanoid = LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+    if Humanoid then
+        Humanoid.WalkSpeed = _G.WalkSpeed
+        Humanoid.JumpPower = _G.JumpPower
+    end
+end
+
+-- ═══════════════════════════════════════
+-- 🎉 STARTUP NOTIFICATIONS
+-- ═══════════════════════════════════════
+
+wait(1)
+
+-- Copy Discord to clipboard on startup
+setclipboard("https://discord.gg/pwQxNDdVUX")
+
+-- Welcome notifications
+Notify("🚢 Gbzinn Script V3.5", "Carregado com sucesso!", 5)
+wait(1)
+Notify("💡 Criado por MIGUEL", "Obrigado pela inspiração!", 3)
+wait(1)
+Notify("💬 Discord", "Link copiado! Entre: discord.gg/pwQxNDdVUX", 5)
+wait(1)
+Notify("🔑 Key Ativa", "Key: Gbzinn-BuildABoatForTreasureScript-SecurityScript", 4)
+wait(1)
+Notify("⚡ Dica", "Ative o Auto Farm para começar a farmar!", 4)
